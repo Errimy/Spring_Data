@@ -27,14 +27,15 @@ public class JpaApApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         for (int i=0;i<100;i++) {
-            patientRepository.save(new Patient(null, "hatim", new Date(), false, (int)(Math.random()*100)));
+            patientRepository.save(new Patient(null, "hatim", new Date(), Math.random()>0.5?true:false, (int)(Math.random()*100)));
         }
         Page<Patient> patients=patientRepository.findAll(PageRequest.of(0,5));
         System.out.println("Totale de page :"+patients.getTotalPages());
         System.out.println("Totale d'element :"+patients.getTotalElements());
         System.out.println("Num page "+patients.getNumber());
         List<Patient> content = patients.getContent();
-        content.forEach(
+        Page <Patient> byMalade= patientRepository.findByMalade( true,PageRequest.of(0,4));
+        byMalade.forEach(
                 p->{
                     System.out.println("====================================");
                     System.out.println(p.getId());
